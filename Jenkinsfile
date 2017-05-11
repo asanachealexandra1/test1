@@ -1,9 +1,9 @@
 pipeline {
-    agent { docker 'ruby' }
+    agent any
     stages {
-        stage('build') {
+        stage('Start') {
             steps {
-                sh 'ruby --version'
+                sh 'echo \'CLM 1\''
             }
         }
     }
