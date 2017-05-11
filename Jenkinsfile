@@ -1,69 +1,26 @@
-pipeline {
-  agent any
-  stages {
-    stage('Start') {
-      steps {
-        sh 'echo \'Start\''
-      }
-    }
-    stage('Parallel') {
-      steps {
-        parallel(
-          "CLM1": {
-            sh 'echo \'CLM 1\''
-          },
-          stage('Parallel') {
-              steps {
-                parallel(
-                      "Parallel 1": {
-                        sh 'echo \'Parallel 1\''
 
-                      },
-                      "Parallel 2": {
-                        sh 'echo \'Parallel 2\''
-
-                      },
-                      "Parallel 3": {
-                        sh 'echo \'Parallel 3\''
-
-                          }
-                       )
-                    }
-                 },
-        stage('Finish1') {
-          steps {
-            sh 'echo \'Finish 1\''
-          }
+parallel (
+    "CLM1" : {
+            stage('Build') {
+                sleep 10
+            }
+            stage('Test') {
+              sleep 20
+            }
+    },
+    "CLM2" : {
+            stage('Build') {
+                println 'Build embedded solution'
+            }
+        stage('Test') {
+            parallel (
+                "test-lowend" : {
+                  sleep 10
+                }, 
+                "test-highend" : {
+                  sleep 15
+                }
+            )
         }
-          "CLM2": {
-            sh 'echo \'CLM 2\''
-          }
-            stage('Parallel') {
-              steps {
-                 parallel(
-                      "Parallel 4": {
-                        sh 'echo \'Parallel 4\''
-
-                       },
-                      "Parallel 5": {
-                        sh 'echo \'Parallel 5\''
-
-                       }
-                    )
-                 }
-            },
-        stage('Finish2') {
-          steps {
-            sh 'echo \'Finish 2\''
-          }
-         }
-        )
-      }
     }
-    stage('Finish') {
-      steps {
-        sh 'echo \'Finish\''
-      }
-    }
-  }
-}  
+)
